@@ -23,7 +23,8 @@ class TestCalculator(unittest.TestCase):
     def test_show_form(self):
         """ Tests form is showing """
         row2 = self.browser.find_element_by_id('row2')
-        self.assertEqual(row2, not None)
+        row2.get_attribute('innerTEXT')
+        self.assertEqual(row2, b)
 
     def test_create_board(self):
         """ Tests board is created with proper dimensions """
@@ -33,13 +34,9 @@ class TestCalculator(unittest.TestCase):
         submit_btn = self.browser.find_element_by_id('submit')
         submit_btn.click()
 
-        board_count = 0
-        for i in range(2):
-            board_child = self.browser.find_element_by_id("board")[0]["children"][i]
-            board_count += 1
-            self.assertEqual(board_child, i)
+        board_buttons = self.browser.find_elements_by_class_name("board-btn")
 
-        self.assertEqual(2*2, board_count)
+        self.assertEqual(2*2, len(board_buttons))
 
     def test_reset_board(self):
         """" Tests board is emptied """
@@ -49,7 +46,7 @@ class TestCalculator(unittest.TestCase):
         submit_btn = self.browser.find_element_by_id('submit')
         submit_btn.click()
 
-        board_buttons = self.browser.find_elements_by_class("board-btn")
+        board_buttons = self.browser.find_elements_by_class_name("board-btn")
         random_int = random.rand_int(0, 3)
 
         board_buttons[random_int].click()
@@ -76,7 +73,10 @@ class TestCalculator(unittest.TestCase):
         submit_btn = self.browser.find_element_by_id('submit')
         submit_btn.click()
 
-        board_buttons = self.browser.find_elements_by_class("board-btn")
+        two_players = self.browser.find_element_by_id("two-players")
+        two_players.click()
+
+        board_buttons = self.browser.find_elements_by_class_name("board-btn")
 
         board_buttons[0].click()
         board_buttons[1].click()
@@ -86,11 +86,34 @@ class TestCalculator(unittest.TestCase):
         message = winner_title.get_attribute('innerHTML')
 
         self.assertEqual(message, "Congrats to Player X!")
-        
+
     def test_check_board_cats_game(self):
         """ Tests that game is tied """
-         #finish this test
-        pass
+
+        num = self.browser.find_element_by_id("num")
+        num.send_keys("3")
+        submit_btn = self.browser.find_element_by_id('submit')
+        submit_btn.click()
+
+        two_players = self.browser.find_element_by_id("two-players")
+        two_players.click()
+
+        board_buttons = self.browser.find_elements_by_class_name("board-btn")
+
+        board_buttons[0].click()
+        board_buttons[3].click()
+        board_buttons[1].click()
+        board_buttons[4].click()
+        board_buttons[5].click()
+        board_buttons[2].click()
+        board_buttons[6].click()
+        board_buttons[7].click()
+        board_buttons[8].click()
+
+        cat = self.browser.find_element_by_id("cat")
+        message = cat.get_attribute("innerHTML")
+
+        self.assertEqual(message, "")
 
 if __name__ == '__main__':
     unittest.main()

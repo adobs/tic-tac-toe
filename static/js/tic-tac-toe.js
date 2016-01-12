@@ -39,8 +39,8 @@ $(function(){
         n = parseInt($("input").val());
 
         // figure out dimenions based on window size
-        var btnDimension = ($("#page-div").width() - n*2)/n;
-        $("#board").css("max-width",(btnDimension*n));
+        var btnDimension = (($("#page-div").width() - n*2)/n);
+        $("#board").css("max-width", (btnDimension*n));
 
         // loop through (2x) to create rows and columns of board as buttons
         for (var i=0; i<n; i++){
