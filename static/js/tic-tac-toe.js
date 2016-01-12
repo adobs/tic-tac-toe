@@ -13,16 +13,21 @@ $(function(){
         // change header text
         $("h1").prop('class',"fadeInUpBig").removeAttr("margin-top").html("Tic-Tac-Toe PLUS!");
 
-        //change background div height
-        var pHeight = $("p").height();
-        var headerDivHeight = $("#header-div").height();
-        $("#background-div").height(20+pHeight+headerDivHeight);
-        
         // hide begin button
         $("#begin").hide();
         
         // show form
         $(".game").removeAttr("hidden");
+
+        //change background div height
+        var row1Height = $("#row1").height();
+        var row2Height = $("#row2").height();
+        $("#background-div").height(20+row1Height+row2Height);
+       
+       // set size of placeholder div
+       var arrowWidth = $("#arrow1").height();
+       $("#placeholder").width(arrowWidth);
+
     }
 
     // create board based on form input
@@ -34,15 +39,17 @@ $(function(){
         n = parseInt($("input").val());
 
         // figure out dimenions based on window size
-        var btnDimension = ($("#page-div").width() - n*2*3)/n;
+        var btnDimension = ($("#page-div").width() - n*2)/n;
+        $("#board").css("max-width",(btnDimension*n));
 
         // loop through (2x) to create rows and columns of board as buttons
         for (var i=0; i<n; i++){
             for(var j=0; j<n; j++){
-                $("#board").append("<button style='height:"+btnDimension+";width:"+btnDimension+";padding:0;margin:0;border=3px' class='btn btn-default board-btn' data-row='"+i+"' data-column='"+j+"'}></button>");
+                $("#board").append("<button style='height:"+btnDimension+";width:"+btnDimension+";padding:0;margin:0' class='btn btn-default board-btn' data-row='"+i+"' data-column='"+j+"'}></button>");
             }
         }
-        $(".board-btn").css("font-size",btnDimension);
+
+        $(".board-btn").css("font-size",btnDimension).css("line-height", ".75em");
         //scroll to board
         $('#board')[0].scrollIntoView();
     }
@@ -74,12 +81,15 @@ $(function(){
         evt.target.disabled = true;
         
         // check to see if there is a winner/tie based on latest move
-        checkBoard(move);
+        var answer = checkBoard(move);
 
-        togglePlayer();
-        
-        if (players==="computer"){
-            addComputerMove(move);
+        // if not winner/tie, proceed
+        if (!answer){
+            togglePlayer();
+            
+            if (players==="computer"){
+                addComputerMove(move);
+            }
         }
     }
     
@@ -99,10 +109,11 @@ $(function(){
         var index = _.sample(open, 1);
         $("#board")[0].children[index].innerHTML = move;
         $("#board")[0].children[index].disabled = true;
+        
+        checkBoard(move);
 
         togglePlayer();
 
-        checkBoard(move);
     }
 
     function togglePlayer(){
@@ -119,10 +130,21 @@ $(function(){
         n = parseInt($("input").val());
 
         var winner;
-
-        // check for columns and a complete board
-        var count1;
+        
+        // check for a complete board
         var countBoard = 0;
+
+        for (var r=0; r< n*n; r++){
+            if(($("#board")[0].children[r].innerHTML)!==""){
+                countBoard += 1;
+            }
+        }
+        if(countBoard === (n*n)){
+            winner = false;
+        }
+
+        // check for columns 
+        var count1;
         // double for loop iterates first through the top of the column....
         for (var a=0; a<n; a+=1){
             count1 = 0;
@@ -130,33 +152,28 @@ $(function(){
             for (var k=a; k<(n*n); k+=n){
                 if (($("#board")[0].children[k].innerHTML)===move){
                     count1 += 1;
-                }if(($("#board")[0].children[k].innerHTML)!==""){
-                    countBoard += 1;
                 }
-            }
-            if(countBoard === (n*n)){
-                winner = false;
-            }
-            if (count1===n){
-                winner = true;
+                if (count1===n){
+                    winner = true;
+                } 
             }
         }
 
         // check for rows
         var count2;
         // double for loops iterates first through the first item in each row ...
-        // for (var b=0; b<n; b+=n){
-        //     count2 = 0;
-        //     // ... then iterates through the next item in the row (+=1)
-        //     for (var l=b; l<(n*n); l+=1){
-        //         if (($("#board")[0].children[l].innerHTML)===move){
-        //             count2 += 1;
-        //         }
-        //         if (count2===n){
-        //             winner = true;
-        //         }
-        //     }
-        // }
+        for (var b=0; b<n*n; b+=n){
+            count2 = 0;
+            // ... then iterates through the next item in the row (+=1)
+            for (var l=b; l<(b+n); l+=1){
+                if (($("#board")[0].children[l].innerHTML)===move){
+                    count2 += 1;
+                }
+                if (count2===n){
+                    winner = true;
+                }
+            }
+        }
 
         // check for Top L - Bottom R diagonal
         var count3 = 0;
@@ -187,12 +204,17 @@ $(function(){
             $('#myModalWinning').modal('show');
 
             // disable the board
-            // for (var p=0; p<(n*n-1); p++){
-            //     $("#board")[0].children[p].disabled=true;
-            // }
+            for (var p=0; p<(n*n); p++){
+                $("#board")[0].children[p].disabled=true;
+            }
+            return true;
+
         }else if (winner === false){
             $('#myModalCats').modal('show');
+            return false;
         }
+
+        return null;
     }
 
     // event listener for form submission -- n
