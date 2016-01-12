@@ -1,3 +1,9 @@
+<!-- to do -->
+<!-- - fix winner-text header so it displays winner -->
+<!-- - fix row counting for winning -->
+<!-- - seperate JS file -->
+<!-- - make a 1 player version of game -->
+
 <!DOCTYPE = html>
 <html>
 <head>
@@ -30,15 +36,41 @@
                     <input value="Play!" type="submit">
                 </form>
                 <div id="players">
-                    <button class="btn btn-default">One Player</button>
-                    <button class="btn btn-default">Two Players</button>
+                    <button class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Can you beat a computer?">One Player</button>
+                    <button class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Can you beat a friend?">Two Players</button>
+                    <button class="btn btn-default" id='reset'>Reset Current Board</button>
                 </div> <!-- close players -->
                 <div id="board">
                 </div> <!-- close board -->
             </div> <!-- close column -->
         </div> <!-- close row -->
 
+        <!-- Winning Modal -->
+        <div class="modal fade" id="myModalWinning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id='winner-title'></h4>
+                </div>
+              <div class="modal-body">
+                <img class='img-responsive' src='/static/img/winning.jpg'>
+              </div> <!-- close modal body -->
+            </div> <!-- close modal content -->
+          </div> <!-- close modal dialog -->
+        </div> <!-- close myModal -->
 
+        <!-- Cats Game Modal -->
+        <div class="modal fade" id="myModalCats" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <img class='img-responsive' src='/static/img/grumpy-cat.jpg'>
+              </div> <!-- close modal body -->
+            </div> <!-- close modal content -->
+          </div> <!-- close modal dialog -->
+        </div> <!-- close myModal -->
 
     </div> <!-- close container -->
 
@@ -51,7 +83,7 @@
             // empty board
             $("#board").empty()
             evt.preventDefault();
-            n = $("#n").val();
+            n = parseInt($("#n").val());
 
             // figure out dimenions based on window size
             var btnDimension = ($("#page-div").width() - n*2*3)/n;
@@ -66,26 +98,141 @@
 
         }
 
+        function resetBoard(evt){
+            evt.preventDefault();
+
+            n = parseInt($("#n").val());
+
+            // iterate through tiles on board and empty/enable them
+            for (var m=0; m<(n*n-1); m++){
+                $("#board")[0].children[m].disabled=false;
+                $("#board")[0].children[m].innerHTML="";
+            }
+        }
 
         var move = "X";
         function addMove(evt){
-            // find column and row of clicked on button
-            var column = evt.target.dataset.column;
-            var row = evt.target.dataset.row;
+
+            // // find column and row of clicked on button
+            // var column = evt.target.dataset.column;
+            // var row = evt.target.dataset.row;
+
+            // set button to current move ("X" or "O")
             evt.target.innerHTML = move;
+
+            // disable button just clicked on
+            evt.target.disabled = true;
             
+            // check to see if there is a winner/tie based on latest move
+            checkBoard(move);
+
             // toggle between X and O as current player
             if (move === "X"){
-                move = "O"
+                move = "O";
             }else{
-                move = "X"
+                move = "X";
+            }
+
+        }
+        
+
+        function checkBoard(move){
+
+            n = parseInt($("#n").val());
+
+            var winner;
+
+            // check for columns and a complete board
+            var count1;
+            var countBoard = 0;
+            // double for loop iterates first through the top of the column....
+            for (var a=0; a<n; a+=1){
+                count1 = 0;
+                // ... then iterates through the next item in the column (+=n)
+                for (var k=a; k<(n*n); k+=n){
+                    if (($("#board")[0].children[k].innerHTML)===move){
+                        count1 += 1;
+                    }else if(($("#board")[0].children[k].innerHTML)!==move && ($("#board")[0].children[k].innerHTML)!==""){
+                        countBoard += 1;
+                    }
+                    console.log("count1"+count1);
+                }
+                if (count1===n){
+                    winner = true;
+                }
+                if(countBoard === (n*n - 1)){
+                    winner = false;
+                }
+            }
+
+            // check for rows
+            var count2;
+            // double for loops iterates first through the first item in each row ...
+            for (var b=0; b<n; b+=n){
+                count2 = 0;
+                // ... then iterates through the next item in the row (+=1)
+                for (var l=b; l<(n*n); l+=1){
+                    if (($("#board")[0].children[l].innerHTML)===move){
+                        count2 += 1;
+                    }
+                    if (count2===n){
+                        winner = true;
+                    }
+                }
+            }
+
+            // check for Top L - Bottom R diagonal
+            var count3 = 0;
+            // single for loop iterates across the board
+            for (var c=0; c<(n*n); c+=(n+1)){
+                if (($("#board")[0].children[c].innerHTML)===move){
+                    count3 += 1;
+                }
+                if (count3===n){
+                    winner = true;
+                }
+                
+            }
+
+            // check for Top R - Bottom L diagonal
+            var count4 = 0;
+            // single for loop iterates across the board
+            for (var d=n-1; d<=(n*n-n); d+=(n-1)){
+                if (($("#board")[0].children[d].innerHTML)===move){
+                    count4 += 1;
+                }
+                if (count4===n){
+                    winner = true;
+                }
+                
+            }
+            if (winner === true){
+                // $("#winner-title").innerTEXT("Congrats to Player "+move+"!");
+                $('#myModalWinning').modal('show');
+
+                // disable the board
+                // for (var p=0; p<(n*n-1); p++){
+                //     $("#board")[0].children[p].disabled=true;
+                // }
+            }
+            else if (winner === false){
+                $('#myModalCats').modal('show');
+
+                // disable the board
+                // for (var q=0; q<(n*n-1); q+){
+                //     $("#board")[0].children[q].disabled=true;
+                // }
             }
         }
+
         // event listener for form submission -- n
         $("#n-form").on("submit", createBoard);
 
         // event listener for move click
         $("#board").on("click .board-btn", addMove);
+
+        // event listener for reset board
+        $("#reset").on("click", resetBoard)
     });
     </script>
 </body>

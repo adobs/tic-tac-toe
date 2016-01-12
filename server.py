@@ -21,14 +21,6 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/scrap")
-def scrap():
-    """ Home page """
-
-    return render_template("scrap.html")
-
-
-
 if __name__ == "__main__":
     
     PORT = int(os.environ.get("PORT", 5000))
