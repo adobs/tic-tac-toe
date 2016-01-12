@@ -2,7 +2,15 @@
 <!-- - fix winner-text header so it displays winner -->
 <!-- - fix row counting for winning -->
 <!-- - seperate JS file -->
-<!-- - make a 1 player version of game -->
+<!-- - make it responsive -->
+<!-- - add testing -->
+<!-- - add favicon -->
+<!-- - disable buttons during play (1 player or 2 player) -->
+<!-- - disable the board after winning -->
+<!-- -  make font on inital page larger -->
+<!-- - fix number of squares when n is large -->
+<!-- - move the buttons -->
+<!-- - why is computer moving after won/tie -->
 
 <!DOCTYPE = html>
 <html>
@@ -11,6 +19,12 @@
 
     <!-- jQuery -->
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+
+    <!-- underscore -->
+    <script src="/static/js/underscore.js"></script>
+
+    <!-- animated CSS -->
+    <link rel="stylesheet" href="/static/css/animated.css">
     
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -22,22 +36,83 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+    <style>
+        body{
+            background-image: url(/static/img/tic-tac-toe-background.jpg);
+            background-repeat:none;
+            background-attachment:scroll;
+            background-position:center;
+            -webkit-background-size:cover;
+            -moz-background-size:cover;
+            background-size:cover;
+            -o-background-size:cover;
+            font-family:Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+
+        }
+
+        #header-div h1{
+            font-family:Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight:700;
+            font-size:60px;
+            line-height:75px;
+            margin-bottom:50px
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        hr{
+            border-radius: 4px;
+            border: 4px solid orange;
+        }
+
+        input{
+            border-radius: 4px;
+        }
+        #tic-tac-toe{
+            color: orange;
+            font-weight: bold;
+        }
+        #num{
+            width: 70px;
+        }
+        #players{
+            text-align: center;
+        }
+
+    </style>
+
 
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
+            <div class='col-md-8 col-md-offset-2 col-xs-12' id='header-div'>
+                <h1>Welcome to <br>Tic-Tac-Toe<br>PLUS!</h1>
+                <hr></hr>
+                <button type="button" id="begin" class="btn btn-primary btn-lg">Begin</button>
+            </div> <!-- close column -->
+        </div> <!-- close row -->
+        <div class="row">
             <div class='col-md-6 col-md-offset-3 col-xs-12' id="page-div">
-                <h1>Welcome to Tic-Tac-Toe PLUS!</h1>
-                <h2>Tic-Tac-Toe is an nxn game.  Usually n is 3.  What would you like n to be?</h2>
-                <form id="n-form">
-                    <label>n is:</label>
-                    <input type="number" placeholder="Type a number" id="n" name="n" min="0">
+                <p class="game" hidden>Tic-Tac-Toe is an nxn game where n is 3.<br>This is <span id='tic-tac-toe'>Tic-Tac-Toe PLUS</span>, so you get to pick 'n'.<br>Also, you get to choose if you are playing the computer or another person -- and can switch mid-game!</p>
+                <form id="n-form" class="game" hidden>
+                    <label class="game" hidden>n is:</label>
+                    <input id='num' type="number" placeholder="#" id="n" name="n" min="0">
                     <input value="Play!" type="submit">
                 </form>
-                <div id="players">
-                    <button class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Can you beat a computer?">One Player</button>
-                    <button class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Can you beat a friend?">Two Players</button>
+                <div id="players" class="game" hidden>
+                    <div class="btn-group" data-toggle="buttons">
+                      <label class="btn btn-primary active" id='one-player-label'>
+                        <input type="radio" name="options" id="one-player" autocomplete="off" value="computer" checked>One Player</label>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="options" id="two-players" autocomplete="off" value="friends">Two Players</label>
+                    </div> <!-- close toggles -->
+
+                    <!-- <button class="btn btn-default" id='1-player' data-toggle="tooltip" data-placement="bottom" title="Can you beat a computer?">One Player</button>
+                    <button class="btn btn-default" id='2-players' data-toggle="tooltip" data-placement="bottom" title="Can you beat a friend?">Two Players</button> -->
                     <button class="btn btn-default" id='reset'>Reset Current Board</button>
                 </div> <!-- close players -->
                 <div id="board">
@@ -77,42 +152,67 @@
     <script type="text/javascript">
     $(function(){
 
+        var computer;
+
+        // set the beginning text alignment
+        var windowHeight = $(window).height();
+        var headerDivHeight = $("#header-div").height();
+        $("#header-div").css("margin-top", (windowHeight-headerDivHeight)/2);
+
+
+        function showForm(evt){
+            // change header text
+            $("h1").prop('class',"fadeInUpBig").removeAttr("margin-top").html("Tic-Tac-Toe PLUS!");
+            
+            // hide begin button
+            $("#begin").hide();
+            
+            // show form
+            $(".game").removeAttr("hidden");
+
+
+
+        }
+
         // create board based on form input
         function createBoard(evt){
-            
+
+
             // empty board
             $("#board").empty()
             evt.preventDefault();
-            n = parseInt($("#n").val());
+            n = parseInt($("input").val());
 
             // figure out dimenions based on window size
             var btnDimension = ($("#page-div").width() - n*2*3)/n;
-            
+
             // loop through (2x) to create rows and columns of board as buttons
             for (var i=0; i<n; i++){
                 for(var j=0; j<n; j++){
                     $("#board").append("<button style='height:"+btnDimension+";width:"+btnDimension+";padding:0;margin:0;border=3px' class='btn btn-default board-btn' data-row='"+i+"' data-column='"+j+"'}></button>");
-
                 }
             }
 
+            //scroll to board
+            $('#board')[0].scrollIntoView();
         }
 
         function resetBoard(evt){
             evt.preventDefault();
 
-            n = parseInt($("#n").val());
+            n = parseInt($("input").val());
 
             // iterate through tiles on board and empty/enable them
-            for (var m=0; m<(n*n-1); m++){
+            for (var m=0; m<(n*n); m++){
                 $("#board")[0].children[m].disabled=false;
                 $("#board")[0].children[m].innerHTML="";
             }
+
         }
 
         var move = "X";
         function addMove(evt){
-
+            var players = $('input[name=options]:checked').val();
             // // find column and row of clicked on button
             // var column = evt.target.dataset.column;
             // var row = evt.target.dataset.row;
@@ -126,19 +226,47 @@
             // check to see if there is a winner/tie based on latest move
             checkBoard(move);
 
-            // toggle between X and O as current player
+            togglePlayer();
+            
+            if (players==="computer"){
+                addComputerMove(move);
+            }
+        }
+        
+        function addComputerMove(move){
+            n = parseInt($("input").val());
+            
+            var open = [];
+
+            for (var counter =0; counter<(n*n-1); counter++){
+                if (($("#board")[0].children[counter].innerHTML)===""){
+                    open.push(counter);
+                }
+            }
+            console.log("open is"+open);
+
+            var index = _.sample(open, 1);
+            console.log("index is"+index);
+            $("#board")[0].children[index].innerHTML = move;
+            $("#board")[0].children[index].disabled = true;
+
+            togglePlayer();
+
+            checkBoard(move);
+        }
+
+        function togglePlayer(){
+         // toggle between X and O as current player 
             if (move === "X"){
                 move = "O";
             }else{
                 move = "X";
             }
-
         }
-        
 
         function checkBoard(move){
 
-            n = parseInt($("#n").val());
+            n = parseInt($("input").val());
 
             var winner;
 
@@ -155,12 +283,11 @@
                     }else if(($("#board")[0].children[k].innerHTML)!==move && ($("#board")[0].children[k].innerHTML)!==""){
                         countBoard += 1;
                     }
-                    console.log("count1"+count1);
                 }
                 if (count1===n){
                     winner = true;
                 }
-                if(countBoard === (n*n - 1)){
+                if(countBoard === (n*n)){
                     winner = false;
                 }
             }
@@ -168,18 +295,18 @@
             // check for rows
             var count2;
             // double for loops iterates first through the first item in each row ...
-            for (var b=0; b<n; b+=n){
-                count2 = 0;
-                // ... then iterates through the next item in the row (+=1)
-                for (var l=b; l<(n*n); l+=1){
-                    if (($("#board")[0].children[l].innerHTML)===move){
-                        count2 += 1;
-                    }
-                    if (count2===n){
-                        winner = true;
-                    }
-                }
-            }
+            // for (var b=0; b<n; b+=n){
+            //     count2 = 0;
+            //     // ... then iterates through the next item in the row (+=1)
+            //     for (var l=b; l<(n*n); l+=1){
+            //         if (($("#board")[0].children[l].innerHTML)===move){
+            //             count2 += 1;
+            //         }
+            //         if (count2===n){
+            //             winner = true;
+            //         }
+            //     }
+            // }
 
             // check for Top L - Bottom R diagonal
             var count3 = 0;
@@ -191,7 +318,6 @@
                 if (count3===n){
                     winner = true;
                 }
-                
             }
 
             // check for Top R - Bottom L diagonal
@@ -204,8 +330,8 @@
                 if (count4===n){
                     winner = true;
                 }
-                
             }
+
             if (winner === true){
                 // $("#winner-title").innerTEXT("Congrats to Player "+move+"!");
                 $('#myModalWinning').modal('show');
@@ -217,11 +343,6 @@
             }
             else if (winner === false){
                 $('#myModalCats').modal('show');
-
-                // disable the board
-                // for (var q=0; q<(n*n-1); q+){
-                //     $("#board")[0].children[q].disabled=true;
-                // }
             }
         }
 
@@ -232,7 +353,17 @@
         $("#board").on("click .board-btn", addMove);
 
         // event listener for reset board
-        $("#reset").on("click", resetBoard)
+        $("#reset").on("click", resetBoard);
+
+        // event listener for 1 player (vs computer)
+        $("#1-player").on("click", function(){computer = true; $("#2-players").prop("disabled", true);})
+
+        // event listener for 2 players (vs a friend)
+        $("#2-players").on("click", function(){computer = false; $("#1-player").prop("disabled", true);})
+
+        // event listener for clicking begin button
+        $("#begin").on("click", showForm);
+
     });
     </script>
 </body>
