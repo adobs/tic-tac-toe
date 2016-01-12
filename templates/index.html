@@ -1,0 +1,92 @@
+<!DOCTYPE = html>
+<html>
+<head>
+    <title>Tic-Tac-Toe PLUS</title>
+
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class='col-md-6 col-md-offset-3 col-xs-12' id="page-div">
+                <h1>Welcome to Tic-Tac-Toe PLUS!</h1>
+                <h2>Tic-Tac-Toe is an nxn game.  Usually n is 3.  What would you like n to be?</h2>
+                <form id="n-form">
+                    <label>n is:</label>
+                    <input type="number" placeholder="Type a number" id="n" name="n" min="0">
+                    <input value="Play!" type="submit">
+                </form>
+                <div id="players">
+                    <button class="btn btn-default">One Player</button>
+                    <button class="btn btn-default">Two Players</button>
+                </div> <!-- close players -->
+                <div id="board">
+                </div> <!-- close board -->
+            </div> <!-- close column -->
+        </div> <!-- close row -->
+
+
+
+    </div> <!-- close container -->
+
+    <script type="text/javascript">
+    $(function(){
+
+        // create board based on form input
+        function createBoard(evt){
+            
+            // empty board
+            $("#board").empty()
+            evt.preventDefault();
+            n = $("#n").val();
+
+            // figure out dimenions based on window size
+            var btnDimension = ($("#page-div").width() - n*2*3)/n;
+            
+            // loop through (2x) to create rows and columns of board as buttons
+            for (var i=0; i<n; i++){
+                for(var j=0; j<n; j++){
+                    $("#board").append("<button style='height:"+btnDimension+";width:"+btnDimension+";padding:0;margin:0;border=3px' class='btn btn-default board-btn' data-row='"+i+"' data-column='"+j+"'}></button>");
+
+                }
+            }
+
+        }
+
+
+        var move = "X";
+        function addMove(evt){
+            // find column and row of clicked on button
+            var column = evt.target.dataset.column;
+            var row = evt.target.dataset.row;
+            evt.target.innerHTML = move;
+            
+            // toggle between X and O as current player
+            if (move === "X"){
+                move = "O"
+            }else{
+                move = "X"
+            }
+        }
+        // event listener for form submission -- n
+        $("#n-form").on("submit", createBoard);
+
+        // event listener for move click
+        $("#board").on("click .board-btn", addMove);
+    });
+    </script>
+</body>
+</html>
