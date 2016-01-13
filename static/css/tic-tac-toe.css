@@ -25,6 +25,7 @@ body{
 
 p{
     font-size: 20px;
+    word-wrap: break-word;
 }
 
 hr{
@@ -51,6 +52,11 @@ input{
 
 #reset, .btn-group{
     margin-bottom: 10px;
+}
+
+.btn-group{
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #background-div{
@@ -81,9 +87,9 @@ h4{
 }
 
 #board{
-    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     padding: 0;
-    text-align: center;
     word-wrap: break-word;
 }
 
