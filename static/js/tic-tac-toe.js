@@ -9,6 +9,22 @@ $(function(){
     $("#background-div").height(30+headerDivHeight);
     $("#background-div").css("margin-top", marginTop+30);
 
+    function resizeApp(){
+        var n = parseInt($("input#num").val());
+
+        // make buttons change size
+        var btnDimension1 = Math.min(($(window).width() - 100)/n, ($(window).height()-100)/n);
+        $(".board-btn").width(btnDimension1);
+        $(".board-btn").height(btnDimension1);
+        // $("#board").width(btnDimension1*n +n*2);
+        $(".board-btn").css("font-size",btnDimension1).css("line-height", ".75em");
+
+        // make background-div different height
+        var row1Height1 = $("#row1").height();
+        var row2Height1 = $("#row2").height();
+        $("#background-div").height(20+row1Height1+row2Height1);
+    }
+
     function showForm(evt){
         // change header text
         $("h1").prop('class',"fadeInUpBig").removeAttr("margin-top").html("Tic-Tac-Toe PLUS!");
@@ -229,23 +245,7 @@ $(function(){
 
     // event listener for clicking begin button
     $("#begin").on("click", showForm);
-
+    // event listener for window resizing
+    $(window).resize(resizeApp);
 });
 
-function resizeApp(){
-    var n = parseInt($("input#num").val());
-
-    // make buttons change size
-    var btnDimension1 = Math.min(($(window).width() - 100)/n, ($(window).height()-100)/n);
-    $(".board-btn").width(btnDimension1);
-    $(".board-btn").height(btnDimension1);
-    // $("#board").width(btnDimension1*n +n*2);
-    $(".board-btn").css("font-size",btnDimension1).css("line-height", ".75em");
-
-    // make background-div different height
-    var row1Height1 = $("#row1").height();
-    var row2Height1 = $("#row2").height();
-    $("#background-div").height(20+row1Height1+row2Height1);
-}
-// event listener for window resizing
-$(window).resize(resizeApp);
