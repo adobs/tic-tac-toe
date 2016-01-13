@@ -56,19 +56,23 @@
                 </div> <!-- close column -->
             </div> <!-- close row -->
             <div class="row game" id='row2' hidden>
-                <div class='col-md-6 col-md-offset-3 col-xs-12' id="page-div">
+                <div class='col-md-3 col-xs-0'>
+                    <div id='left-shout' class='shout' hidden>
+                    </div> <!-- close left shout -->
+                </div> <!-- close column -->
+                <div class='col-md-6 col-xs-12' id="page-div">
                     <p class="game" hidden>Tic-Tac-Toe is game played on an 'n'x'n' board where 'n' is traditionally 3.<br>This is <span id='tic-tac-toe'>Tic-Tac-Toe PLUS</span>, so you get to pick 'n'.<br><br>Also, you get to choose if you are playing the computer or another person --<br>and can switch mid-game!</p>
                     <div id='arrow-form-div'>
                         <div id='arrow1-div' class='arrow-div'>
                             <img id='arrow1' class="img-responsive arrow" src='/static/img/arrow.png'>
                         </div> <!-- close arrow1 -->
-                        <div id='form'>
-                            <form id="n-form" class="game" hidden>
-                                <label class="game" hidden><span id='tic-tac-toe'>n is:</span></label>
-                                <input id='num' type="number" placeholder="#" id="n" name="n" min="2">
-                                <input class='btn-primary btn btn-default' value="Play!" id='submit' type="submit">
-                            </form>
-                        </div>
+            
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active" id='one-player-label'>
+                                <input type="radio" name="options" id="one-player" autocomplete="off" value="computer" checked>One Player</label>
+                            <label class="btn btn-primary">
+                                 <input type="radio" name="options" id="two-players" autocomplete="off" value="friends">Two Players</label>
+                        </div> <!-- close toggles -->
                         <div id='placeholder'>
                         </div> <!-- close placeholder -->
                     </div> <!-- close arrow form -->
@@ -76,16 +80,21 @@
                         <div id='arrow2-div' class='arrow-div'>
                             <img id='arrow2' class="img-responsive arrow" src='/static/img/arrow.png'>
                         </div> <!-- close arrow2 -->
-                        <div class="btn-group" data-toggle="buttons">
-                          <label class="btn btn-primary active" id='one-player-label'>
-                            <input type="radio" name="options" id="one-player" autocomplete="off" value="computer" checked>One Player</label>
-                          <label class="btn btn-primary">
-                            <input type="radio" name="options" id="two-players" autocomplete="off" value="friends">Two Players</label>
-                        </div> <!-- close toggles -->
+                        <div id='form'>
+                            <form id="n-form" class="game" hidden>
+                                <label class="game" hidden><span id='tic-tac-toe'>n is:</span></label>
+                                <input id='num' type="number" placeholder="#" id="n" name="n" min="2">
+                                <input class='btn-primary btn btn-default' value="Play!" id='submit' type="submit">
+                            </form>
+                        </div>
                         <button class="btn btn-default" id='reset'>Reset Current Board</button>
                     </div> <!-- close players -->
                     <div id="board">
                     </div> <!-- close board -->
+                </div> <!-- close column -->
+                <div class='col-md-3 col-xs-0'>
+                    <div id='right-shout' class='shout' hidden>
+                    </div> <!-- close left shout -->
                 </div> <!-- close column -->
             </div> <!-- close row -->
         </div> <!-- close background -->

@@ -33,10 +33,11 @@ $(function(){
     // create board based on form input
     function createBoard(evt){
 
+
         // empty board
         $("#board").empty();
         evt.preventDefault();
-        n = parseInt($("input").val());
+        n = parseInt($("input#num").val());
 
         // figure out dimenions based on window size
         var btnDimension = (($("#page-div").width() - n*2)/n);
@@ -57,7 +58,7 @@ $(function(){
     function resetBoard(evt){
         evt.preventDefault();
 
-        n = parseInt($("input").val());
+        n = parseInt($("input#num").val());
 
         // iterate through tiles on board and empty/enable them
         for (var m=0; m<(n*n); m++){
@@ -66,6 +67,32 @@ $(function(){
         }
 
     }
+
+    function addShout(){
+
+
+        var exclamations = ["Good job!", "Are you sure?", "WOW!", "Bazinga!", "Great move!", "Nice going!", "Way to go!", "Amazing!", "Super!"];
+        var animations = ["bounce", "flash","pulse", "rubberBand", "shake", "swing", "tada", "wobble", "jello"];
+        var sides = ["left-shout", "right-shout"];
+
+        var fontSize = (Math.random() * 30)+40;
+        var exclamation = _.sample(exclamations, 1);
+        var animation = _.sample(animations, 1);
+        var side = _.sample(sides, 1);
+
+        var backgroundDivHeight = $("#background-div").height();
+        var board = $("#board").height();
+
+        var height = (Math.random() * 80)+40;
+
+        $("#"+side).removeAttr("hidden");
+        $("#"+side).empty();
+
+        $("#"+side).html(exclamation).css("font-size", fontSize).addClass(animation).css("margin-top", backgroundDivHeight + (board/3) - height);
+
+
+    }
+
 
     var move = "X";
     function addMove(evt){
@@ -83,6 +110,8 @@ $(function(){
         // check to see if there is a winner/tie based on latest move
         var answer = checkBoard(move);
 
+        addShout();
+
         // if not winner/tie, proceed
         if (!answer){
             togglePlayer();
@@ -94,7 +123,7 @@ $(function(){
     }
     
     function addComputerMove(move){
-        n = parseInt($("input").val());
+        n = parseInt($("input#num").val());
         
         // the open array will collect the indices of open spots
         var open = [];
@@ -127,7 +156,7 @@ $(function(){
 
     function checkBoard(move){
 
-        n = parseInt($("input").val());
+        n = parseInt($("input#num").val());
 
         var winner;
         

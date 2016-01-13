@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import random
 import unittest
 
@@ -9,7 +12,9 @@ class TestCalculator(unittest.TestCase):
         """ Before each test, will click through the begin button on 1st page """
         self.browser = webdriver.Firefox()
         self.browser.get('http://localhost:5000/')
-        btn = self.browser.find_element_by_id('begin')
+        btn = WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.ID, "begin"))
+        )
         btn.click()
 
     def tearDown(self):
@@ -22,9 +27,11 @@ class TestCalculator(unittest.TestCase):
 
     def test_show_form(self):
         """ Tests form is showing """
-        row2 = self.browser.find_element_by_id('row2')
-        row2.get_attribute('innerTEXT')
-        self.assertEqual(row2, b)
+        num = self.browser.find_element_by_id('num')
+        num.send_keys("2")
+
+        value = num.get_attribute('value').encode('utf-8')
+        self.assertEqual("2", value)
 
     def test_create_board(self):
         """ Tests board is created with proper dimensions """
@@ -47,14 +54,14 @@ class TestCalculator(unittest.TestCase):
         submit_btn.click()
 
         board_buttons = self.browser.find_elements_by_class_name("board-btn")
-        random_int = random.rand_int(0, 3)
+        random_int = random.randint(0, 3)
 
         board_buttons[random_int].click()
 
         reset = self.browser.find_element_by_id("reset")
         reset.click()
 
-        reset_board_buttons = self.browser.find_elements_by_class("board-btn")
+        reset_board_buttons = self.browser.find_elements_by_class_name("board-btn")
         
         reset_board = False
         for i in range(4):
@@ -85,7 +92,7 @@ class TestCalculator(unittest.TestCase):
         winner_title = self.browser.find_element_by_id("winner-title")
         message = winner_title.get_attribute('innerHTML')
 
-        self.assertEqual(message, "Congrats to Player X!")
+        assert "Congrats to Player" in message
 
     def test_check_board_cats_game(self):
         """ Tests that game is tied """
