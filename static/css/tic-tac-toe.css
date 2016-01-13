@@ -64,6 +64,7 @@ input{
     opacity: .9;
     background-color: black;
     text-align: center;
+    padding: 10px;
 }
 
 .board-btn{

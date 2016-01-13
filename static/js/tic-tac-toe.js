@@ -60,27 +60,19 @@ $(function(){
 
         // loop through (2x) to create rows and columns of board as buttons
         for (var i=0; i<n; i++){
-            $("#board").append("<div class='row' id=board-row-"+i+"></div>")
+            $("#board").append("<div class='row' id=board-row-"+i+"></div>");
             for(var j=0; j<n; j++){
                 $("#board-row-"+i).append("<button style='height:"+btnDimension+";width:"+btnDimension+";padding:0;margin:0' class='btn btn-default board-btn' data-row='"+i+"' data-column='"+j+"'}></button>");
             }
         }
 
         $(".board-btn").css("font-size",btnDimension).css("line-height", ".75em");
+        
         //scroll to board
         $('#board')[0].scrollIntoView();
-    }
 
-    function resetBoard(evt){
-        evt.preventDefault();
-
-        var n = parseInt($("input#num").val());
-
-        // iterate through buttons on board and empty/enable them
-        for (var m=0; m<(n*n); m++){
-            $(".board-btn")[m].disabled=false;
-            $(".board-btn")[m].innerHTML="";
-        }
+        // change text from play to reset on form submission button
+        $("#submit").val("Reset board");
 
     }
 
@@ -240,11 +232,9 @@ $(function(){
     // event listener for move click
     $("#board").on("click .board-btn", addMove);
 
-    // event listener for reset board
-    $("#reset").on("click", resetBoard);
-
     // event listener for clicking begin button
     $("#begin").on("click", showForm);
+
     // event listener for window resizing
     $(window).resize(resizeApp);
 });

@@ -45,32 +45,6 @@ class TestCalculator(unittest.TestCase):
 
         self.assertEqual(2*2, len(board_buttons))
 
-    def test_reset_board(self):
-        """" Tests board is emptied """
-
-        num = self.browser.find_element_by_id("num")
-        num.send_keys("2")
-        submit_btn = self.browser.find_element_by_id('submit')
-        submit_btn.click()
-
-        board_buttons = self.browser.find_elements_by_class_name("board-btn")
-        random_int = random.randint(0, 3)
-
-        board_buttons[random_int].click()
-
-        reset = self.browser.find_element_by_id("reset")
-        reset.click()
-
-        reset_board_buttons = self.browser.find_elements_by_class_name("board-btn")
-        
-        reset_board = False
-        for i in range(4):
-            if reset_board_buttons[i].get_attribute('innerHTML') == "":
-                reset_board = True
-            else:
-                reset_board = False
-
-        self.assertEqual(reset_board, True)
 
     def test_check_board_winner(self):
         """ Tests that game is won """
