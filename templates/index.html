@@ -1,6 +1,5 @@
 <!-- to do -->
 <!-- - make it responsive -->
-<!-- - add testing -->
 <!-- - deploy -->
 <!-- - create a readme -->
 
@@ -10,7 +9,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -25,9 +24,6 @@
     <!-- underscore -->
     <script src="/static/js/underscore.js"></script>
 
-    <!-- animated CSS -->
-    <link rel="stylesheet" href="/static/css/animated.css">
-    
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -56,16 +52,16 @@
                 </div> <!-- close column -->
             </div> <!-- close row -->
             <div class="row game" id='row2' hidden>
-                <div class='col-md-3 col-xs-0'>
+                <div class='col-md-3 col-xs-0 shout-div' >
                     <div id='left-shout' class='shout' hidden>
                     </div> <!-- close left shout -->
                 </div> <!-- close column -->
                 <div class='col-md-6 col-xs-12' id="page-div">
                     <p class="game" hidden>Tic-Tac-Toe is game played on an 'n'x'n' board where 'n' is traditionally 3.<br>This is <span id='tic-tac-toe'>Tic-Tac-Toe PLUS</span>, so you get to pick 'n'.<br><br>Also, you get to choose if you are playing the computer or another person --<br>and can switch mid-game!</p>
                     <div id='arrow-form-div'>
-                        <div id='arrow1-div' class='arrow-div'>
-                            <img id='arrow1' class="img-responsive arrow" src='/static/img/arrow.png'>
-                        </div> <!-- close arrow1 -->
+                        <!-- <div id='arrow1-div' class='arrow-div'> -->
+                            <!-- <img id='arrow1' class="img-responsive arrow" src='/static/img/arrow.png'> -->
+                        <!-- </div> close arrow1 -->
             
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-primary active" id='one-player-label'>
@@ -73,13 +69,13 @@
                             <label class="btn btn-primary">
                                  <input type="radio" name="options" id="two-players" autocomplete="off" value="friends">Two Players</label>
                         </div> <!-- close toggles -->
-                        <div id='placeholder'>
-                        </div> <!-- close placeholder -->
+                        <!-- <div id='placeholder'> -->
+                        <!-- </div> close placeholder -->
                     </div> <!-- close arrow form -->
                     <div id="players" class="game" hidden>
-                        <div id='arrow2-div' class='arrow-div'>
-                            <img id='arrow2' class="img-responsive arrow" src='/static/img/arrow.png'>
-                        </div> <!-- close arrow2 -->
+                        <!-- <div id='arrow2-div' class='arrow-div'> -->
+                            <!-- <img id='arrow2' class="img-responsive arrow" src='/static/img/arrow.png'> -->
+                        <!-- </div> close arrow2 -->
                         <div id='form'>
                             <form id="n-form" class="game" hidden>
                                 <label class="game" hidden><span id='tic-tac-toe'>n is:</span></label>
@@ -92,7 +88,7 @@
                     <div id="board">
                     </div> <!-- close board -->
                 </div> <!-- close column -->
-                <div class='col-md-3 col-xs-0'>
+                <div class='col-md-3 col-xs-0 shout-div'>
                     <div id='right-shout' class='shout' hidden>
                     </div> <!-- close left shout -->
                 </div> <!-- close column -->

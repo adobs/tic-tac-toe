@@ -68,32 +68,6 @@ $(function(){
 
     }
 
-    function addShout(){
-
-
-        var exclamations = ["Good job!", "Are you sure?", "WOW!", "Bazinga!", "Great move!", "Nice going!", "Way to go!", "Amazing!", "Super!"];
-        var animations = ["bounce", "flash","pulse", "rubberBand", "shake", "swing", "tada", "wobble", "jello"];
-        var sides = ["left-shout", "right-shout"];
-
-        var fontSize = (Math.random() * 30)+40;
-        var exclamation = _.sample(exclamations, 1);
-        var animation = _.sample(animations, 1);
-        var side = _.sample(sides, 1);
-
-        var backgroundDivHeight = $("#background-div").height();
-        var board = $("#board").height();
-
-        var height = (Math.random() * 80)+40;
-
-        $("#"+side).removeAttr("hidden");
-        $("#"+side).empty();
-
-        $("#"+side).html(exclamation).css("font-size", fontSize).addClass(animation).css("margin-top", backgroundDivHeight + (board/3) - height);
-
-
-    }
-
-
     var move = "X";
     function addMove(evt){
         var players = $('input[name=options]:checked').val();
@@ -109,8 +83,6 @@ $(function(){
         
         // check to see if there is a winner/tie based on latest move
         var answer = checkBoard(move);
-
-        addShout();
 
         // if not winner/tie, proceed
         if (!answer){
@@ -259,3 +231,22 @@ $(function(){
     $("#begin").on("click", showForm);
 
 });
+
+function resizeApp(){
+    n = parseInt($("input#num").val());
+
+    // make buttons change size
+    var btnDimension1 = (($("#page-div").width() - n*2)/n);
+    $(".board-btn").width(btnDimension1);
+    $(".board-btn").height(btnDimension1);
+    $("#board").width(btnDimension1*n +n*2);
+    $(".board-btn").css("font-size",btnDimension1).css("line-height", ".75em");
+
+
+    // make background-div different height
+    var row1Height1 = $("#row1").height();
+    var row2Height1 = $("#row2").height();
+    $("#background-div").height(20+row1Height1+row2Height1);
+}
+// event listener for window resizing
+  $(window).resize(resizeApp);
