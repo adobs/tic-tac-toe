@@ -6,7 +6,7 @@ Tic-Tac-Toe PLUS lets users play a game of tic-tac-toe.  Things get fun as users
 
 # Preview
 
-![Preview](/static/gif/tic-tac-toe.gif)
+![Preview](/static/mp4/tic-tac-toe.mp4)
 
 # Tech Stack
 
